@@ -6,13 +6,13 @@ source("CompanyStrategyFunctions.R")
 source("GovernmentFunctions.R")
 source("PopulationFunctions.R")
 
-n.iter <- 1200
-price.history <- matrix(0, 26, n.iter)
+n.iter <- 60
+price.history <- matrix(NA, 26, n.iter)
 
 # init world
 source("InitWorld.R")
 # run world
-world <- CreateCompany(world, 26 * 4)
+world <- CreateCompany(world, 26 * 5)
 for(time in 1:n.iter){
   message("===== ",time," =====")
   world <- DeterminePrices(world)
@@ -22,8 +22,10 @@ for(time in 1:n.iter){
   world <- MoveResourceQueues(world)
   world <- IncreaseLotAges(world)
   price.history[, time] <- world$resource.information$price
+  cat("State Cash:",round(world$government$state.funds),"Pop size:",round(world$population$size)," lots on market:",nrow(world$market),"\n")
   par(mfcol=c(1,2))
-  image(price.history)
+  #image(price.history)
+  PlotPriceHistory(world, price.history, time, n.iter)
   plot(world$companies$money - world$companies$loan.remaining.amount,col="white")
   text(x=1:nrow(world$companies), y=world$companies$money - world$companies$loan.remaining.amount, world$companies$type)
   par(mfcol=c(1,1))

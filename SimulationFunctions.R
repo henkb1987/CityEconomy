@@ -1,10 +1,9 @@
-RunWorld <- function(world, days){
-  # companies are active. They produce, make, and place buy/sell orders.
-  for(i in 1:nrow(world$companies)){world <- RunCompany(world, i)}
-  # price for each resource is calculated
-  world <- DeteterminePrices(world)
-  # consumers are active. They place orders for sink-goods.
-  # government is active. Interests are paid. Companies are bankrupted. New companies are created.
-  # clean-up phase. Resources are moved up the queue. 
-  world <- MoveResourceQueues(world)
+PlotPriceHistory <- function(world, price.history, i, n.iter){
+  plot(price.history[1,1:i],type="l",col=rainbow(26)[1],
+       xlim=c(0,n.iter),ylim=c(min(price.history,na.rm = T),max(price.history,na.rm = T)),
+       lty=world$resource.information$type[1]+1)
+  for(j in 2:26){
+    lines(price.history[j,1:i],type="l",col=rainbow(26)[j], lty=world$resource.information$type[j]+1)
+  }
+  text(i, world$resource.information$price,LETTERS)
 }

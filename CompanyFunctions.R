@@ -42,7 +42,7 @@ ProduceResource <- function(world, company.id){
   
   # production difficulty and produce if we can
   difficulty <- degree(world$resource.graph)[my.r.num]^2
-  if(sample(1:difficulty, 1) <= 5 & world$population$employed < (world$population$size + difficulty)){
+  if(world$companies$money[company.id] > difficulty & world$population$employed < (world$population$size + difficulty)){
     # employ the workers
     world$population$employed <- world$population$employed + difficulty
     # pay the workers
@@ -51,9 +51,9 @@ ProduceResource <- function(world, company.id){
     # get the resource
     world$companies$queue.5[company.id] <- paste0(world$companies$queue.5[company.id], world$companies$type[company.id], collapse = "")
     world$companies$last.action[company.id] <- "produce"
-    #message("Company ",company.id," produces ",my.r)
+    message("Company ",company.id," produces ",my.r)
   } else {
-    #message("Company", company.id, "fails to produce",my.r)
+    message("Company", company.id, "fails to produce",my.r)
   }
   return(world)
 }

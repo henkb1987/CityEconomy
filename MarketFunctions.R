@@ -1,6 +1,6 @@
 BuyResource <- function(world, buyer.id, resource){
   # check if there are any lots in market and if company has money, else do nothing
-  if(nrow(world$market) == 0 | world$companies$money[company.id] > 0){
+  if(nrow(world$market) == 0 | world$companies$money[buyer.id] > 0){
     world$resource.information$demand[which(LETTERS == resource)] <- world$resource.information$demand[which(LETTERS == resource)] + 1
     return(world)
   }
@@ -29,6 +29,7 @@ BuyResource <- function(world, buyer.id, resource){
   }
   # add resource to buyer inventory
   world$companies$inventory[buyer.id] <- paste0(world$companies$inventory[buyer.id], seller$resource, collapse = "")
+  message(paste0(world$companies$inventory[buyer.id], seller$resource, collapse = ""))
   # remove lot from market and remove demand
   original.lot <- which(world$market$lot.id == seller$lot.id)
   world$market <- world$market[-original.lot, ]
@@ -62,20 +63,24 @@ DeterminePrices <- function(world){
 }
 GetPrices <- function(world, r, get.min = F, inf.if.unavailable = F){
   r.num <- match(r, LETTERS)
-  price <- subset(world$market, world$market$resource %in% r)$price
+  price <- rep(NA, length(r))
+  
+  # on market
+  for(i in 1:length(r)){
+    price[i] <- mean(world$market$price[world$market$resource == r[i]], na.rm = T)
+  }
+  
   # if only marketable resources sought, return inf if none available
-  if(length(price) == 0 & inf.if.unavailable){
-    return(1e7)
+  if(inf.if.unavailable){
+    price[is.nan(price)] <- 1e6
+    return(price)
   }
-  # otherwise revert to general knowledge
-  if(length(price) == 0){
-    price <- world$resource.information$price[r.num]
+  # in database
+  for(i in which(is.nan(price))){
+    price[i] <- world$resource.information$price[which(LETTERS == r[i])]
   }
-  else if(is.infinite(price) | is.na(price) | is.nan(price)){
-    price <- world$resource.information$price[r.num]
-  } else {
-    price <- 0
-  }
+  # fall back
+  price[is.infinite(price) | is.na(price) | is.nan(price) | is.nan(price)] <- 0
   
   if(get.min){
     price <- min(price)

@@ -26,19 +26,19 @@ world <- list(
     stringsAsFactors = F
   ),
   market = data.frame(
-    lot.id = 1,
-    seller.id = -1,
-    resource = NA,
+    lot.id = 0,
+    seller.id = 0,
+    resource = "",
     price = 0,
     age = 0
   ),
   government = data.frame(
     state.funds = 1e6,
-    loan.size = 250,
-    max.relative.loan.size = 2,
+    loan.size = 125,
+    max.relative.loan.size = 3,
     loan.term = 30 * 12,
-    interest.rate = .08,
-    transaction.tax = .01
+    interest.rate = .001,
+    transaction.tax = .005
   ),
   population = data.frame(
     size=1e3,

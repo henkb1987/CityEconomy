@@ -16,14 +16,14 @@ CollectInterest <- function(world){
     }
     world$companies$loan.remaining.time[i] <- max(world$companies$loan.remaining.time[i] - 1, 0)
     # end of loan term dealings
-    if(world$companies$loan.remaining.time <= 0 & world$companies$loan.remaining.amount < 10){
+    if(world$companies$loan.remaining.time[i] <= 0 & world$companies$loan.remaining.amount[i] < 10){
       world$companies$loan.amount[i] <- 0
       world$companies$loan.remaining.amount[i] <- 0
       world$companies$loan.term[i] <- 0
       world$companies$loan.remaining.time[i] <- 0
-    } else if(world$companies$loan.remaining.time <= 0 & world$companies$loan.remaining.amount > 0){
+    } else if(world$companies$loan.remaining.time[i] <= 0 & world$companies$loan.remaining.amount[i] > 0){
       world <- BankruptCompany(world, i)
-    } else if(world$companies$money[i] < -1 * world$companies$loan.amount[i] & world$companies$loan.remaining.amount > 0){
+    } else if(world$companies$money[i] < -1 * world$companies$loan.amount[i] & world$companies$loan.remaining.amount[i] > 0){
       world <- BankruptCompany(world, i)
     }
   }

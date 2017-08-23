@@ -14,7 +14,7 @@ ConsumeResource <- function(world, resource){
   # order by price and find seller
   seller <- relevant.offers[order(relevant.offers$price)[1],]
   # output
-  # message(resource, "@",round(seller$price, 2)," consumed")
+  message(resource, "@",round(seller$price, 2)," consumed seller was",seller$seller.id)
   # deduct money from population account
   world$population$money <- world$population$money - seller$price
   # add money to seller
